@@ -44,7 +44,7 @@ architecture Behavioral of Memoire_donnee is
 -- On a un tableau de 200 cases dont chacune peut contenir un STD_LOGIC_VECTOR
 -- de taille 8. C.f. cours page 22.
 
-type memoire is array (199 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
+type memoire is array (255 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
 -- On déclare un signal de type memoire.
 signal memory : memoire; 
 
@@ -54,9 +54,7 @@ process (CLK) -- On se synchronise sur la clock comme explicité dans le sujet.
 
 begin
 	
-	if FALLING_EDGE (CLK) then --On se place au niveau de front descendant pour
-										-- laisser le temps à la clock de démarrer.
-										-- RISING_EDGE pourrait fonctionner sans doute (à tester).
+	if FALLING_EDGE (CLK) then 
 		
 		if(RST = '0') then --On initialise le contenu de la mémoire à 0x00.
 			
