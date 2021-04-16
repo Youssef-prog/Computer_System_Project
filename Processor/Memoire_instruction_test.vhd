@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   14:25:42 04/16/2021
+-- Create Date:   17:27:35 04/16/2021
 -- Design Name:   
--- Module Name:   /home/amari/Documents/Processor/Memoire_instruction_test.vhd
+-- Module Name:   /home/amari/Documents/Git_Processor/Computer_System_Project_Microprocessor/Processor/Memoire_instruction_test.vhd
 -- Project Name:  Processor
 -- Target Device:  
 -- Tool versions:  
@@ -30,7 +30,7 @@ USE ieee.std_logic_1164.ALL;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
-USE ieee.numeric_std.ALL;
+--USE ieee.numeric_std.ALL;
  
 ENTITY Memoire_instruction_test IS
 END Memoire_instruction_test;
@@ -83,11 +83,11 @@ BEGIN
       -- hold reset state for 100 ns.
       wait for 100 ns;	
 
-      Adresse <= "00000000";
+      Adresse <= "00000001";
 
       -- insert stimulus here 
 
-      wait for 100 ns;
+      wait;
    end process;
 
 END;
