@@ -39,20 +39,21 @@ architecture Behavioral of Memoire_instruction is
 
 -- On a une mémoire d'instruction de type tableau contenant 500 cases.
 
-type memoire_instr is array (128 downto 0) of STD_LOGIC_VECTOR(31 downto 0);
+type memoire_instr is array (0 to 255) of STD_LOGIC_VECTOR(31 downto 0);
 
-signal instruction_memory : memoire_instr;
+constant instruction_memory : memoire_instr:= (x"06000500", x"06010A00",
+																x"06020800", x"05030000",
+																x"01040002", others=> x"00000000");
 
 -- On initialise la ROM 
 
 begin
 
-instruction_memory <=(others => (others=>'1'));
 
 process (CLK)
 
 	begin
-		if FALLING_EDGE(CLK) then
+		if RISING_EDGE(CLK) then
 			OUTPUT <= instruction_memory(to_integer(unsigned(Adresse)));
 		end if;
 			
