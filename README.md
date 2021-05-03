@@ -11,7 +11,7 @@ Mémoire d'instruction :      OK
 
 Mémoire de données    :      OK
 
-LC                    :      NOT YET 
+LC                    :      OK 
 
 MUX                   :      NOT YET  
 
