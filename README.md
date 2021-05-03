@@ -13,8 +13,8 @@ Mémoire de données    :      OK
 
 LC                    :      OK 
 
-MUX                   :      NOT YET  
+MUX                   :      OK 
 
 PIPELINE              :      NOT YET 
 
-Gestion des aléas     :    OPTIONAL 
+Gestion des aléas     :      OPTIONAL 
