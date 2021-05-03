@@ -30,7 +30,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity ALU is
     Port ( I1, I2 : in  STD_LOGIC_VECTOR (7 downto 0);
-			  Ctrl_Alu : in STD_LOGIC_VECTOR(1 downto 0);
+			  Ctrl_Alu : in STD_LOGIC_VECTOR(2 downto 0);
 			  flag_C : out STD_LOGIC;
 			  flag_O : out STD_LOGIC_VECTOR(7 downto 0);
            RES : out  STD_LOGIC_VECTOR(7 downto 0));
@@ -43,8 +43,8 @@ signal RES_temp: STD_LOGIC_VECTOR (7 downto 0);
 
 begin
 
-	temp <= ("00000000"&I1) + ("00000000"&I2) when Ctrl_Alu = "01" else
-	("00000000"&I1) - ("00000000"&I2) when Ctrl_Alu = "11" else
+	temp <= ("00000000"&I1) + ("00000000"&I2) when Ctrl_Alu = "001" else
+	("00000000"&I1) - ("00000000"&I2) when Ctrl_Alu = "011" else
 	std_logic_vector(to_unsigned((to_integer(unsigned("00000000"&I1)) * to_integer(unsigned("00000000"&I2))),16)) ;
 
 RES_temp <= temp(7 downto 0);

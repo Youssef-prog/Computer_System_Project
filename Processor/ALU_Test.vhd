@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   11:17:24 04/11/2021
+-- Create Date:   09:41:28 05/03/2021
 -- Design Name:   
--- Module Name:   /home/amari/Documents/Processor/ALU_Test.vhd
+-- Module Name:   /home/amari/Documents/Git_Processor/Computer_System_Project_Microprocessor/Processor/ALU_Test.vhd
 -- Project Name:  Processor
 -- Target Device:  
 -- Tool versions:  
@@ -43,7 +43,7 @@ ARCHITECTURE behavior OF ALU_Test IS
     PORT(
          I1 : IN  std_logic_vector(7 downto 0);
          I2 : IN  std_logic_vector(7 downto 0);
-         Ctrl_Alu : IN  std_logic_vector(1 downto 0);
+         Ctrl_Alu : IN  std_logic_vector(2 downto 0);
          flag_C : OUT  std_logic;
          flag_O : OUT  std_logic_vector(7 downto 0);
          RES : OUT  std_logic_vector(7 downto 0)
@@ -54,7 +54,7 @@ ARCHITECTURE behavior OF ALU_Test IS
    --Inputs
    signal I1 : std_logic_vector(7 downto 0) := (others => '0');
    signal I2 : std_logic_vector(7 downto 0) := (others => '0');
-   signal Ctrl_Alu : std_logic_vector(1 downto 0) := (others => '0');
+   signal Ctrl_Alu : std_logic_vector(2 downto 0) := (others => '0');
 
  	--Outputs
    signal flag_C : std_logic;
@@ -63,7 +63,6 @@ ARCHITECTURE behavior OF ALU_Test IS
    -- No clocks detected in port list. Replace <clock> below with 
    -- appropriate port name 
  
-
  
 BEGIN
  
@@ -78,13 +77,12 @@ BEGIN
         );
 
 
-
    -- Stimulus process
    stim_proc: process
    begin		
 		I1 <= "00000011";
 		I2 <= "00000001";
-		Ctrl_Alu <= "11";
+		Ctrl_Alu <= "011";
 
       wait;
    end process;
