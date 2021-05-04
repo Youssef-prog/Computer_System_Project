@@ -44,7 +44,6 @@ begin
 Ctrl_Alu <= "001"	when op_code = x"01" else -- add
 				"010"	when op_code = x"02" else --  mul
 				"011"	when op_code = x"03" else -- sou
-				"100"	when op_code = x"04" else -- div
 				"111";
 
 end Behavioral;
