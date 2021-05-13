@@ -37,15 +37,19 @@ entity Pipeline is
 					 
 					CLK : in STD_LOGIC;
 					
+					IP : in std_logic_vector ( 7 downto 0);
 					
-					
-					OUTPUTT : in std_logic_vector (31 downto 0);
+					--OUTPUTT : in std_logic_vector (31 downto 0);
 					
 					-- out
 					
 					sortie_reg_A   : out std_logic_vector (7 downto 0);
 					
-					sortie_reg_B   :	out std_logic_vector (7 downto 0)
+					sortie_reg_B   :	out std_logic_vector (7 downto 0);
+
+					W_instruction : out  	STD_LOGIC; -- W spécifie si une écriture doit être réalisée. Cette entrée est active à 1.
+					DATA_reg_instruction : out 		STD_LOGIC_VECTOR ( 7 downto 0 );
+					Write_reg_instruction	: out 		STD_LOGIC_VECTOR ( 3 downto 0 )	
 					
 					
 				);
@@ -135,21 +139,21 @@ signal WRITE_MEM_RE : STD_LOGIC_VECTOR ( 3 downto 0 );
 signal Add : STD_LOGIC_VECTOR ( 7 downto 0 );
 -- Signaux pour résoudre les problèmes de bits.
 signal read_a_4, read_b_4 : STD_LOGIC_VECTOR ( 3 downto 0 );
-signal void : STD_LOGIC_VECTOR (3 downto 0);
-signal IP : std_logic_vector ( 7 downto 0);
 signal A_LI_DI, B_LI_DI, OP_LI_DI, C_LI_DI : STD_LOGIC_VECTOR ( 7 downto 0 );
-signal OUTPUT_inst : STD_LOGIC_VECTOR ( 31 downto 0 );
+signal OUTPUT_inst, OUTPUTT : STD_LOGIC_VECTOR ( 31 downto 0 );
+
 
 begin
 -- wrt le fil qui sort de w 
+mem_inst : Memoire_instruction port map(Add, CLK, OUTPUTT);
+
 OP_LI_DI <= OUTPUTT(31 downto 24);
 A_Li_Di <= OUTPUTT(23 downto 16);
 B_LI_DI <= OUTPUTT(15 downto 8);
 C_LI_DI <= OUTPUTT(7 downto 0);
 
-read_a_4 <= B_LI_Di(3 downto 0);
-read_b_4 <= C_LI_Di(3 downto 0);
-
+--read_a_4 <= B_LI_Di(3 downto 0);
+--read_b_4 <= C_LI_Di(3 downto 0);
 
 reg :Banc_registres port map (RST, read_a_4, read_b_4, sortie_QA, sortie_QB, wrt,DATA_MEM_RE,WRITE_MEM_RE,clk);
 mem_alu : ALU port map (B_DI_EX,C_DI_EX, sng_ctrl_alu, carry, overflow,resultat);
@@ -157,19 +161,18 @@ LC_MEM_RE: LC_REGISTRE port map ( OP_MEM_RE, WW);
 LC_DI_EX : LC_EX port map ( OP_DI_EX, sng_ctrl_alu);
 LC_EX_MEM : LC_MEMORY port map ( OP_EX_MEM, LS );
 mem_data : Memoire_donnee port map (ADR,INP, LS, RST,CLK,OUTP);
+Write_reg_instruction	<= WRITE_MEM_RE; --A MEM_RE
+DATA_reg_instruction <= DATA_MEM_RE; --B MEM_RE
+W_instruction <= wrt; --OP_MEM_RE
 sortie_reg_B <= sortie_QB;
 sortie_reg_A <= sortie_QA;
 
-mem_inst : Memoire_instruction port map(Add, CLK, OUTPUT_inst);
 process (clk)
 begin
 	if rising_edge(CLK) then
 	
 		if RST = '0' then 
 		
-	--
-		
-		--
 		A_DI_EX   <= (others => '0');
 		B_DI_EX   <= (others => '0');
 		C_DI_EX   <= (others => '0');
@@ -182,112 +185,83 @@ begin
 		A_MEM_RE  <= (others => '0');
 		B_MEM_RE  <= (others => '0');
 		OP_MEM_RE <= (others => '0');
-		IP <= X"00";
+		--IP <= X"00";
 		Add <= X"00";
 		
 		else
 		
-		IP <= IP+1;
 		Add <= IP;
 		
-		if OP_LI_DI = x"06" then  --afc
 		A_DI_EX  <=	A_LI_DI;
-		B_DI_EX  <=	B_LI_DI;
-		C_DI_EX  <= C_LI_DI;
-		OP_DI_EX <= OP_LI_DI;
-		--
+
 		A_EX_MEM <= A_DI_EX;
-		B_EX_MEM <= B_DI_EX;
-		OP_EX_MEM <= OP_DI_EX;
-		
-		--
+
 		A_MEM_RE <= A_EX_MEM;
-		B_MEM_RE <= B_EX_MEM;
-		OP_MEM_RE<= OP_EX_MEM;
 		
-		--
-		 DATA_MEM_RE  <= B_MEM_RE;
-		 WRITE_MEM_RE <= A_MEM_RE(3 downto 0);
-		 wrt          <= WW;
+		
+		if OP_LI_DI = x"06" then  --afc
+		
+		B_DI_EX  <=	B_LI_DI;
+		B_EX_MEM <= B_DI_EX;
+		B_MEM_RE <= B_EX_MEM;
 		
 		elsif OP_LI_DI = x"05" then --COP
-		A_DI_EX  <=	A_LI_DI;
+		
+		read_a_4 <= B_LI_Di(3 downto 0);
 		B_DI_EX  <=	sortie_QA;
-		C_DI_EX  <= C_LI_DI;
-		OP_DI_EX <= OP_LI_DI;
-		--
-		A_EX_MEM <= A_DI_EX;
 		B_EX_MEM <= B_DI_EX;
-		OP_EX_MEM <= OP_DI_EX;
-		--
-		A_MEM_RE <= A_EX_MEM;
 		B_MEM_RE <= B_EX_MEM;
-		OP_MEM_RE<= OP_EX_MEM;
 		
-		--
-		 DATA_MEM_RE  <= B_MEM_RE;
-		 WRITE_MEM_RE <= A_MEM_RE(3 downto 0);
-		 wrt     		 <= WW;
+		elsif OP_LI_DI = x"01" or OP_LI_DI = x"02" or OP_LI_DI = x"03" then -- ADD MUL SOU 
 		
-		elsif OP_LI_DI = x"01" or OP_LI_DI =x"02" or OP_LI_DI = x"03" then -- ADD MUL SOU 
-		A_DI_EX  <=	A_LI_DI;
+		read_a_4 <= B_LI_Di(3 downto 0);
+		read_b_4 <= C_LI_Di(3 downto 0);
+
 		B_DI_EX  <=	sortie_QA;
 		C_DI_EX  <= sortie_QB;
-		OP_DI_EX <= OP_LI_DI;
+
 		--
-		A_EX_MEM <= A_DI_EX;
 		B_EX_MEM <= resultat;
-		OP_EX_MEM <= OP_DI_EX;
-		
-		--
-		A_MEM_RE <= A_EX_MEM;
 		B_MEM_RE <= B_EX_MEM;
-		OP_MEM_RE<= OP_EX_MEM;
-		--
-		DATA_MEM_RE  <= B_MEM_RE;
-		WRITE_MEM_RE <= A_MEM_RE(3 downto 0);
-		wrt          <= WW;
 		
-		elsif OP_LI_DI = x"07"  then -- LOAD  
-		A_DI_EX  <=	A_LI_DI;
+		elsif OP_LI_DI = x"07"  then -- LOAD 
+		
+		read_a_4 <= B_LI_Di(3 downto 0);
+		read_b_4 <= C_LI_Di(3 downto 0);		
+		
 		B_DI_EX  <=	sortie_QA;
 		C_DI_EX  <= sortie_QB;
-		OP_DI_EX <= OP_LI_DI;
+
 		--
-		A_EX_MEM <= A_DI_EX;
 		B_EX_MEM <= resultat;
-		OP_EX_MEM <= OP_DI_EX;
 		--
-		A_MEM_RE <= A_EX_MEM;
 		ADR <= B_EX_MEM;
 		B_MEM_RE <= OUTP ;
-		OP_MEM_RE<= OP_EX_MEM;
-		--
-		DATA_MEM_RE  <= B_MEM_RE;
-		WRITE_MEM_RE <= A_MEM_RE(3 downto 0);
-		wrt          <= WW;
-		
+
 		elsif OP_LI_DI = x"08"  then -- STORE
-		A_DI_EX  <=	A_LI_DI;
+		
+		read_a_4 <= B_LI_Di(3 downto 0);
+		read_b_4 <= C_LI_Di(3 downto 0);
+		
 		B_DI_EX  <=	sortie_QA;
 		C_DI_EX  <= sortie_QB;
-		OP_DI_EX <= OP_LI_DI;
 		--
-		A_EX_MEM <= A_DI_EX;
 		B_EX_MEM <= resultat;
-		OP_EX_MEM <= OP_DI_EX;
 		--
-		A_MEM_RE <= A_EX_MEM;
 		ADR <= A_EX_MEM;
 		INP <= B_EX_MEM;
-		B_EX_MEM <= OUTP;
+		B_MEM_RE <= OUTP;
+				
+		end if;
+		
+		OP_DI_EX <= OP_LI_DI;
+		OP_EX_MEM <= OP_DI_EX;
 		OP_MEM_RE<= OP_EX_MEM;
-		--
+		
 		DATA_MEM_RE  <= B_MEM_RE;
 		WRITE_MEM_RE <= A_MEM_RE(3 downto 0);
 		wrt          <= WW;
 		
-		end if;
 		end if;
 	end if;	
 end process;
