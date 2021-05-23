@@ -1,0 +1,29 @@
+AFC 29 255
+COP 0 29
+AFC 29 87
+COP 1 29
+AFC 29 255
+AFC 28 254
+EQU 29 29 28
+JMF 29 10																			
+PRI 0 
+JMP 7																				
+AFC 28 255
+AFC 27 255
+EQU 28 28 27
+JMF 28 22																				
+PRI 0 
+AFC 27 5
+AFC 26 8
+ADD 27 27 26
+AFC 26 10
+MUL 27 27 26
+COP 0 27
+JMP 29																				
+AFC 29 89
+COP 0 29
+AFC 29 88
+COP 0 29
+AFC 29 3
+COP 1 29
+PRI 0 
