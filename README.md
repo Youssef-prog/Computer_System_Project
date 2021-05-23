@@ -15,6 +15,6 @@ LC                    :      OK
 
 MUX                   :      OK 
 
-PIPELINE              :      NOT YET 
+PIPELINE              :      ok 
 
 Gestion des aléas     :      OPTIONAL 
