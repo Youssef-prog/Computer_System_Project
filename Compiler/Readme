@@ -1,4 +1,9 @@
-Prohibited: 
+Warning:
+
+Group of instructions NO: 
 
 - a = b;
 - a = b + c;
+- int a = b;
+
+The group of instruction NO do not work if these instructions are not called at the beginning of a condition loop before any other instructions.
