@@ -9,11 +9,15 @@ fpos_t position;
 int pos = 0;
 int ligne = 0;
 int current = 0;
+int rec = 0;
 //int liste[10];
 //int tell = 0;
 //int indice = 0;
 //int indd = 0;
-
+int e = 0;
+int op = 1;
+int compteur1 = 0;
+int compteur2 = 0;
  	
 %}
 
@@ -100,15 +104,15 @@ variable : T_VAR {liste_declaration($1);}
 		 | T_VAR {liste_declaration($1);}
 		 ;
 
-variable_instr : T_VAR {{/*lengths(1)*/;int d = isDeclare($1);if(d==false){ yyerror();release_tab(); exit(0);}
-						else{setInit($1);liste_declaration($1);};}} 
+variable_instr : T_VAR {/*lengths(1)*/;int d = isDeclare($1);if(d==false){ yyerror();release_tab(); exit(0);}
+						else{ char *v = $1; if(isInit(v) == true && isConst(v) == true){yyerror();release_tab(); exit(0);} 				 else{setInit($1);liste_declaration($1);}}} 
 		 		 T_VIRG variable_instr 
-		 		 | T_VAR {{/*lengths(1)*/;int d = isDeclare($1);if(d==false){ yyerror();release_tab(); exit(0);}
-						else{setInit($1);liste_declaration($1);};}}
+		 		 | T_VAR {/*lengths(1)*/;int d = isDeclare($1);if(d==false){ yyerror();release_tab(); exit(0);}
+						else{ char *v = $1; if(isInit(v) == true && isConst(v) == true){yyerror();release_tab(); exit(0);} else{setInit($1);liste_declaration($1);}}}
 				 ;
 
 arithmetic : T_NB {val = $1;i = i+1;insert_temp(fichier, $1);}
-		   | T_VAR {i = i+1;int d = isDeclare($1); if(d==false){ yyerror();release_tab(); exit(0);}if(isInit($1)==false){fprintf(stderr,"%s %s %s", "Warning : Variable non initialisée -->", $1, "\n\n");}int v = get_last_value_of_var($1);insert_temp(fichier, v);val = v;} 
+		   | T_VAR {/*compteur1++;*/int d = isDeclare($1); if(d==false){ yyerror();release_tab(); exit(0);}if(isInit($1)==false){fprintf(stderr,"%s %s %s", "Warning : Variable non initialisée -->", $1, "\n\n");}e = recherche_symb($1);if(op == 1){insert_cop(fichier, e);}} 
 		   | arithmetic T_PLUS arithmetic {add_function(receive_temp1(), receive_temp2(), fichier);pop_temp();}
 		   | arithmetic T_MOINS arithmetic {sou_function(receive_temp1(), receive_temp2(), fichier);pop_temp();}
 		   | arithmetic T_MUL arithmetic {mul_function(receive_temp1(), receive_temp2(), fichier); pop_temp();}
@@ -116,13 +120,14 @@ arithmetic : T_NB {val = $1;i = i+1;insert_temp(fichier, $1);}
 		   | T_OP arithmetic T_CP
 		   ;
 
-condition : arithmetic T_CMP_EQU arithmetic {cmp_equ_function(receive_temp1(), receive_temp2(), fichier);pop_temp();}
-		  | arithmetic T_SUP arithmetic {sup_function(receive_temp1(), receive_temp2(), fichier);pop_temp();}
-		  | arithmetic T_INF arithmetic {inf_function(receive_temp1(), receive_temp2(), fichier);pop_temp();}
+condition : arithmetic T_CMP_EQU arithmetic {cmp_equ_function(receive_temp1(), receive_temp2(), fichier);rec = receive_temp1();pop_temp();}
+		  | arithmetic T_SUP arithmetic {sup_function(receive_temp1(), receive_temp2(), fichier);rec = receive_temp1();pop_temp();}
+		  | arithmetic T_INF arithmetic {inf_function(receive_temp1(), receive_temp2(), fichier);rec = receive_temp1();pop_temp();}
 		  ;
 
-instruction : variable_instr   												//Interdit l'utilisateur d'écrire une 																								instruction avant de l'avoir préalablement déclarée.
-			  T_EQUAL arithmetic {if(i >= 1){int tt = value_ind_res();cop_rec_function(tt, fichier, val);pop_temp();reinit_ind_res();} i=0;}
+instruction : variable_instr  {op = 1;}													//Interdit 																						l'utilisateur d'écrire une 																						instruction avant de l'avoir préalablement déclarée.
+			  T_EQUAL arithmetic {if(i >= 1){int tt = value_ind_res();cop_rec_function(tt, fichier, val);pop_temp();reinit_ind_res();i=0;}
+								 else{if(compteur1 == 1){int d = recherche_symb($1);cop_function(e,fichier,d);pop_temp(); e = 0;op = 1;}}}
 			;
 
 
@@ -132,8 +137,7 @@ if_else : T_IF_OP condition T_CP T_OB
 			{
 			fseek(fichier, 0, SEEK_END);
 			ligne = get_nb_lignes_asm();
-			fgetpos(fichier, &position);
-
+			fgetpos(fichier, &position); //emplacement du curseur 
 			/*tell = ftell(fichier);
 			liste[0] = 0;
 			indice = indice + 1;							code associé au bout de code en commentaire ci-dessous.
@@ -143,7 +147,7 @@ if_else : T_IF_OP condition T_CP T_OB
 			printf("indice: %d\n", indice);*/
 			
 			jmf_function(receive_temp1()-1, ligne, fichier);
-
+			reinit_ind_res();
 
 			}
 
@@ -177,7 +181,8 @@ if_else : T_IF_OP condition T_CP T_OB
 			ligne = get_nb_lignes_asm();
 			fgetpos(fichier, &position);
 			jmp_function(ligne, fichier);
-			
+			pop_temp();
+			reinit_ind_res();
 
 			}
 
@@ -202,7 +207,7 @@ if_else : T_IF_OP condition T_CP T_OB
 			fgetpos(fichier, &position);
 			
 			jmf_function(receive_temp1()-1, ligne, fichier);
-
+			reinit_ind_res();
 
 			}
 
@@ -223,7 +228,9 @@ while : T_WHILE T_OP condition T_CP T_OB
 			ligne = get_nb_lignes_asm();
 			fgetpos(fichier, &position);
 			
-			jmf_function(receive_temp1()-1, ligne, fichier);
+			jmf_function(rec, ligne, fichier);
+			//masoln();
+			reinit_ind_res();
 
 		}
 
@@ -235,16 +242,14 @@ while : T_WHILE T_OP condition T_CP T_OB
 
 			fsetpos(fichier, &position);
 
-			fprintf(fichier, "JMF %d %d", receive_temp1()-1, current+2);
+			fprintf(fichier, "JMF %d %d", rec, current+2);
 
 			fseek(fichier, 0, SEEK_END);
 			
-			jmp_function(ligne + 1, fichier);
+			jmp_function(ligne - 2, fichier);
 
 
-		
-
-		} T_CB
+		} T_CB //{masolno();reinit_ind_res();}
 		;
 
 							

@@ -57,6 +57,10 @@ int value_ind_res();
 void reinit_ind_res();
 void incr_nb_lignes_asm();
 int get_nb_lignes_asm();
+void masoln();
+void masolno();
+bool isConst(char *symb);
+void insert_cop(FILE *fichier, int symb);
 
 /*Prototypes des fonctions pour création de l'ASM*/
 

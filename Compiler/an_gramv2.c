@@ -32,7 +32,9 @@ int asm_code[10];
 
 int n = 0;
 
-/*Fonction permettant d'initialiser notre tableau principal contenant les variables*/
+int masol = 0;
+
+/*Fonction permettant d'initialiser notre tableau principal contenant les variables.*/
 
 void initialize_tab(){
 
@@ -42,7 +44,7 @@ void initialize_tab(){
 
 }
 
-/*Fonction permettant de vider le tableau principal*/
+/*Fonction permettant de vider le tableau principal.*/
 
 void release_tab(){
 
@@ -50,8 +52,8 @@ void release_tab(){
 
 }
 
-/*Fonction permettant de rechercher un symbole (variable) dans le tableau principal*/
-/*Le paramètre symb est le symbole recherché*/
+/*Fonction permettant de rechercher un symbole (variable) dans le tableau principal.*/
+/*Le paramètre symb est le symbole recherché.*/
 
 int recherche_symb(char* symb){
 	
@@ -72,8 +74,8 @@ int recherche_symb(char* symb){
 }
 
 
-/*Fonction permettant d'afficher le tableau souhaité*/
-/*Le paramètre est le tableau que l'on souhaite afficher*/
+/*Fonction permettant d'afficher le tableau souhaité.*/
+/*Le paramètre est le tableau que l'on souhaite afficher.*/
 
 void afficher_struct(table_symbole s){
 	
@@ -84,8 +86,8 @@ void afficher_struct(table_symbole s){
 	printf("%s %d %d\n", a, b, c);
 }
 
-/*Fonction permettant d'insérer dans le tableau un symbole (variable)*/
-/*Les paramètres sont le type de la variable (int(1)/const int(0)) que l'on souhaite afficher et si la variable est initialisée*/
+/*Fonction permettant d'insérer dans le tableau un symbole (variable).*/
+/*Les paramètres sont le type de la variable (int(1)/const int(0)) que l'on souhaite afficher et si la variable est initialisée.*/
 
 void insert_tableau(bool var_const, bool init){
 	
@@ -121,7 +123,7 @@ void insert_tableau(bool var_const, bool init){
 
 		else{
 
-			fprintf(stderr, "%s", "Présence de variable(s) déjà déclarée(s)\n"); //Avertit d'une ou de variables déjà déclarées
+			fprintf(stderr, "%s", "Présence de variable(s) déjà déclarée(s)\n"); //Avertit d'une ou de variables déjà déclarées.
 
 		}
 
@@ -133,8 +135,8 @@ void insert_tableau(bool var_const, bool init){
 	}	
 }
 
-/*Fonction permettant d'insérer dans le tableau principal les varaibles temporaires nécessaires/
-/*Les paramètres sont le fichier dans lequel l'on va écrire et la valeur de la variable concernée*/
+/*Fonction permettant d'insérer dans le tableau principal les varaibles temporaires nécessaires.*/
+/*Les paramètres sont le fichier dans lequel l'on va écrire et la valeur de la variable concernée.*/
 
 
 void insert_temp(FILE *fichier, int val){
@@ -164,11 +166,16 @@ void insert_temp(FILE *fichier, int val){
 	
 }
 
-/*Fonction permettant de réinitialiser l'index pour les variables temporaires*/
+/*Fonction permettant de réinitialiser l'index pour les variables temporaires.*/
 
 void reinit_ind_res(){
 
-	ind_res = TAILLE_TAB-1;
+	if(masol == 0){
+
+		ind_res = TAILLE_TAB-1;
+
+	}
+
 
 }
 
@@ -179,8 +186,8 @@ int value_ind_res(){
 
 }
 
-/*Fonction permettant de d'appliquer la fonction cop_function autant de fois que nécessaire*/
-/*Les paramètres sont l'index de la variable temporaire, le nom du fichier et la valeur de la variable*/
+/*Fonction permettant de d'appliquer la fonction cop_function autant de fois que nécessaire.*/
+/*Les paramètres sont l'index de la variable temporaire, le nom du fichier et la valeur de la variable.*/
 
 void cop_rec_function(int index_temp, FILE *fichier, int val){
 
@@ -204,16 +211,19 @@ void cop_rec_function(int index_temp, FILE *fichier, int val){
 
 	}
 
+
 	lengthservice = 0;	
 
 	length = 0;
 
 
+
 }
 
-/*Fonction permettanr de retirer un élément une variable temporaire du tableau principal*/
+/*Fonction permettanr de retirer un élément une variable temporaire du tableau principal.*/
 
 void pop_temp(){
+
 
 	if(ind_temp  <= (TAILLE_TAB-2)){
 
@@ -226,7 +236,7 @@ void pop_temp(){
 }
 
 /*Les deux fonctions suivantes permettent de reçevoir deux variables temporaires qui se suivent. Elles sont 
-nécessaire pour les opérations notamment*/
+nécessaire pour les opérations notamment.*/
 
 int receive_temp2(){
 
@@ -241,8 +251,8 @@ int receive_temp1(){
 }
 
 /*Fonction permettant de mettre à jour la valuer d'une variable notamment lorque l'on écrit des intructions de variables après 
-les avoir déjà déclarées et initialisées*/
-/*Le paramètre est la variable souhaitée*/
+les avoir déjà déclarées et initialisées.*/
+/*Le paramètre est la variable souhaitée.*/
 
 int get_last_value_of_var(char *symb){
 	
@@ -281,7 +291,7 @@ void afficher_tableau(){
 
 /*La fonction liste_declaration(char *symb) permet de stocker dans une liste 
 les variables déclarées sur une même ligne.*/
-/*Le paramètre est la variable à déclarer*/
+/*Le paramètre est la variable à déclarer.*/
 
 void liste_declaration(char *symb){ 
 
@@ -291,8 +301,8 @@ void liste_declaration(char *symb){
 
 }
 
-/*Fonction permettant de stocker la valeur associée à une ou plusieurs variables*/
-/*Les paramètres sont la variable et la valeur associée*/
+/*Fonction permettant de stocker la valeur associée à une ou plusieurs variables.*/
+/*Les paramètres sont la variable et la valeur associée.*/
 
 void liste_variable_valeur(char *var, int val){
 	
@@ -303,8 +313,8 @@ void liste_variable_valeur(char *var, int val){
 
 }
 
-/*Fonction permettant de mettre dans la liste listTemp les valeurs de variable*/
-/*Le paramètre est la valeur à insérer dans la liste*/
+/*Fonction permettant de mettre dans la liste listTemp les valeurs de variable.*/
+/*Le paramètre est la valeur à insérer dans la liste.*/
 
 void liste_temp(int arithmetic){
 
@@ -315,7 +325,7 @@ void liste_temp(int arithmetic){
 
 /*La fonction isDeclare(char * symb) permet de savoir si une variable 
 est déjà déclarée ou non.*/
-/*Le paramètre est la variable souhaitée*/
+/*Le paramètre est la variable souhaitée.*/
 
 
 bool isDeclare(char * symb){
@@ -336,8 +346,8 @@ bool isDeclare(char * symb){
 
 }
 
-/*Fonction permettant de savoir si une variable est initialisée ou pas*/
-/*Le paramètre est la variable en question*/
+/*Fonction permettant de savoir si une variable est initialisée ou pas.*/
+/*Le paramètre est la variable en question.*/
 
 bool isInit(char *symb){
 
@@ -359,8 +369,8 @@ bool isInit(char *symb){
 
 }
 
-/*Fonction permettant de marquer l'initialisation d'une variable dans le tableau principal*/
-/*Le paramètre est le symbole(variable) souhaitée pour la marquer initialisée*/
+/*Fonction permettant de marquer l'initialisation d'une variable dans le tableau principal.*/
+/*Le paramètre est le symbole(variable) souhaitée pour la marquer initialisée.*/
 
 void setInit(char *symb){
 
@@ -371,7 +381,7 @@ void setInit(char *symb){
 
 }
 
-/*Fonction permettant de compter le nombre de variables initialisées*/
+/*Fonction permettant de compter le nombre de variables initialisées.*/
 
 void number_of_init(){
 
@@ -380,7 +390,7 @@ void number_of_init(){
 
 }
 
-/*Fonction permettant d'incrémenter le nombre de ligne pour compter le nombre d'instruction ASM*/
+/*Fonction permettant d'incrémenter le nombre de ligne pour compter le nombre d'instruction ASM.*/
 
 void incr_nb_lignes_asm(){
 
@@ -390,12 +400,72 @@ void incr_nb_lignes_asm(){
 
 }
 
-/*Fonction permettant de récupérer le nombre de d'instructions assembleurs générées depuis le début*/
+/*Fonction permettant de récupérer le nombre de d'instructions assembleurs générées depuis le début.*/
 
 int get_nb_lignes_asm(){
 
 	return 	n;
 
+}
+
+/*Les deux fonctions suivantes permettent de protéger l'adresse de la condition du while pour qu'elle ne soit pas écrasée.*/
+
+void masoln(){
+
+ masol = 1;
+
+}
+
+void masolno(){
+
+ masol = 0;
+
+}
+
+/*Fonxtion permettant de savoir si une variable est constante.*/
+/*Le paramètre est le symbole souhaité.*/
+
+bool isConst(char *symb){
+
+	bool constante = false;
+
+	int d = recherche_symb(symb);
+	
+	if(ts[d].var_const == false){
+
+		constante = true;	
+	
+
+	}
+
+	return constante;
+
+}
+
+void insert_cop(FILE *fichier, int symb){
+
+
+	lengthservice = length;
+	
+
+	strncpy(ts[ind_res].nom, "temp" ,SYMBOL_SIZE - 1);
+
+	cop_function(symb, fichier, ind_res);
+
+	if(ind >= ind_res){
+
+		fprintf(stderr, "%s","Warning : Maintenant, il n'y a plus de place dans le tableau\n\n");
+	}
+
+	ind_temp = ind_res;
+	
+	if(ind_res>ind){
+
+	ind_res = ind_res - 1;
+
+	}
+
+	
 }
 
 
@@ -472,7 +542,7 @@ void inf_function(int index_temp1, int index_temp2, FILE *fichier){
 	incr_nb_lignes_asm();
 }
 
-/*Pour les deux fonctions suivantes le bourage du symbole '\t' permet de corriger l'epacement entre deux instructions consécutives*/
+/*Pour les deux fonctions suivantes le bourage du symbole '\t' permet de corriger l'epacement entre deux instructions consécutives.*/
 
 void jmf_function(int condition, int instruction, FILE *fichier){
 

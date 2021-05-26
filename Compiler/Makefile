@@ -24,3 +24,4 @@ free1 : an_gramv2.yacc an_gramv2.h an_lexv2.lex an_gramv2.c
 	yacc -d an_gramv2.yacc
 	gcc y.tab.c lex.yy.c  -o compilo.exe
 	./compilo.exe
+

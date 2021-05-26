@@ -108,7 +108,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "an_gramv2.yacc" /* yacc.c:1909  */
+#line 25 "an_gramv2.yacc" /* yacc.c:1909  */
 char *vari;
 		int nombre;
 
