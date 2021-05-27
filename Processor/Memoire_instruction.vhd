@@ -42,8 +42,9 @@ architecture Behavioral of Memoire_instruction is
 type memoire_instr is array (0 to 255) of STD_LOGIC_VECTOR(31 downto 0);
 
 constant instruction_memory : memoire_instr:= (x"06000500", x"06010A00",
-																x"06020800", x"05030000",
-																x"01040002", others=> x"00000000");
+																x"06020800", x"05030200",
+																x"01040002",  x"08000200", 
+																x"07050000", others=> x"00000000");
 
 -- On initialise la ROM 
 

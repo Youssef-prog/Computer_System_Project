@@ -205,12 +205,14 @@ begin
 		B_EX_MEM <= B_DI_EX;
 		B_MEM_RE <= B_EX_MEM;
 		
+		
 		elsif OP_LI_DI = x"05" then --COP
 		
 		read_a_4 <= B_LI_Di(3 downto 0);
 		B_DI_EX  <=	sortie_QA;
 		B_EX_MEM <= B_DI_EX;
 		B_MEM_RE <= B_EX_MEM;
+		
 		
 		elsif OP_LI_DI = x"01" or OP_LI_DI = x"02" or OP_LI_DI = x"03" then -- ADD MUL SOU 
 		
@@ -226,31 +228,36 @@ begin
 		
 		elsif OP_LI_DI = x"07"  then -- LOAD 
 		
-		read_a_4 <= B_LI_Di(3 downto 0);
-		read_b_4 <= C_LI_Di(3 downto 0);		
+		B_DI_EX  <=	B_LI_DI;
 		
-		B_DI_EX  <=	sortie_QA;
-		C_DI_EX  <= sortie_QB;
+		--read_a_4 <= B_LI_Di(3 downto 0);
+		--read_b_4 <= C_LI_Di(3 downto 0);		
+		
+		--B_DI_EX  <=	sortie_QA;
+		--C_DI_EX  <= sortie_QB;
 
 		--
-		B_EX_MEM <= resultat;
+		B_EX_MEM <= B_DI_EX;
+		--B_EX_MEM <= resultat;
 		--
 		ADR <= B_EX_MEM;
-		B_MEM_RE <= OUTP ;
+		B_MEM_RE <= OUTP;
+		
 
 		elsif OP_LI_DI = x"08"  then -- STORE
 		
 		read_a_4 <= B_LI_Di(3 downto 0);
-		read_b_4 <= C_LI_Di(3 downto 0);
+		--read_b_4 <= C_LI_Di(3 downto 0);
 		
 		B_DI_EX  <=	sortie_QA;
-		C_DI_EX  <= sortie_QB;
+		--C_DI_EX  <= sortie_QB;
 		--
-		B_EX_MEM <= resultat;
+		B_EX_MEM <= B_DI_EX;
+		--B_EX_MEM <= resultat;
 		--
 		ADR <= A_EX_MEM;
 		INP <= B_EX_MEM;
-		B_MEM_RE <= OUTP;
+		--B_MEM_RE <= OUTP;
 				
 		end if;
 		

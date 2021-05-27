@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   00:15:37 05/14/2021
+-- Create Date:   20:13:45 05/27/2021
 -- Design Name:   
 -- Module Name:   /home/amari/Documents/Git_Processor/Computer_System_Project_Microprocessor/Processor/Pipeline_test.vhd
 -- Project Name:  Processor
@@ -96,31 +96,21 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-
-      RST <= '1';
-
-		
 		wait for 100 ns;
-
-		IP <= X"01";
-
+		RST <= '1';
+		IP <= x"00";
 		wait for 100 ns;
-		
-		IP <= X"02";
-		
+		IP <= x"01";
 		wait for 100 ns;
-		
-		IP <= X"03";
-		
+		IP <= x"02";
 		wait for 100 ns;
-		
-		IP <= X"04";
-		
-		
-		--wait for 100 ns;
-      -- insert stimulus here 
-		
-
+		IP <= x"03";
+		wait for 100 ns;
+		IP <= x"04";
+		wait for 100 ns;
+		IP <= x"05";
+		wait for 100 ns;
+		IP <= x"06";
       wait;
    end process;
 
