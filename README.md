@@ -1,7 +1,7 @@
 # Projet_Syst-me_Informatique
-Compilateur  :                              OK
+Compilateur (Base) :    OK
 
-Processeur   : 
+Processeur   :    OK
 
 UAL                   :      OK 
 
@@ -15,6 +15,6 @@ LC                    :      OK
 
 MUX                   :      OK 
 
-PIPELINE              :      ok 
+PIPELINE              :      OK 
 
 Gestion des aléas     :      OPTIONAL 
