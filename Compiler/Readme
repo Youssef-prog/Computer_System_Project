@@ -1,3 +1,9 @@
+Useful command from the Makefile:
+- "make files" : To open all the necessary files for understand the C code.
+- "make test" : To compile and generate the ASM code.
+
+
+
 Warning:
 
 Group of instructions NO: 
